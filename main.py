@@ -44,6 +44,7 @@ class MyWidget(QtWidgets.QWidget):
         self.setWindowTitle('English Words')
         self.setWindowIcon(QtGui.QIcon('flag.png'))
         self.hello = list(dct)
+        self.dct = dct
         self.button1 = QtWidgets.QPushButton()
         self.button2 = QtWidgets.QPushButton()
         self.button3 = QtWidgets.QPushButton()
@@ -74,20 +75,22 @@ class MyWidget(QtWidgets.QWidget):
         self.button1.setFixedSize(QSize(150, 30))
         self.button2.setFixedSize(QSize(150, 30))
         self.layout = QtWidgets.QVBoxLayout()
-        self.setFixedSize(QSize(400, 300))
+        self.setFixedSize(QSize(500, 300))
         self.layout.addWidget(self.text)
         self.layout.addWidget(self.button1)
         self.layout.addWidget(self.button2)
         self.layout.addWidget(self.button3)
         self.setLayout(self.layout)
+        # привязка функции chose_random_word к кнопке стрелочка вправо
+        self.button1.clicked.connect(self.next_random_word)
+        self.button3.clicked.connect(self.translate)
 
-        self.button1.clicked.connect(self.magic)
-
-    def magic(self):
-        self.text.setText(random.choice(self.hello))
-
-    def coup(self):
-        self.text.setText(random.choice(self.hello))
+    def next_random_word(self):
+        self.rnd_word = random.choice(self.hello)
+        self.text.setText(self.rnd_word)
+        
+    def translate(self):
+        self.text.setText(self.dct.get(self.rnd_word))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
