@@ -42,16 +42,16 @@ class MyWidget(QtWidgets.QWidget):
                     dct.update({splt[0]:splt[1]})
 
         self.setWindowTitle('English Words')
-        self.setWindowIcon(QtGui.QIcon('flag.png'))
+        self.setWindowIcon(QtGui.QIcon('UkIcon.png'))
         self.hello = list(dct)
         self.dct = dct
-        self.button1 = QtWidgets.QPushButton()
+        self.button_next_word = QtWidgets.QPushButton()
         self.button2 = QtWidgets.QPushButton()
         self.button3 = QtWidgets.QPushButton()
         self.text = QtWidgets.QLabel("Hello World")
-        self.text.setFont(QFont('Times', 40)) 
+        self.text.setFont(QFont('Times', 35)) 
         self.text.setAlignment(QtCore.Qt.AlignCenter)
-        self.button1.setStyleSheet("QPushButton"
+        self.button_next_word.setStyleSheet("QPushButton"
                              "{"
                              "background-color : lightblue;"
                              "}"
@@ -60,37 +60,39 @@ class MyWidget(QtWidgets.QWidget):
                              "background-color : silver;"
                              "}"
                              )
-        self.button2.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : lightblue;"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : silver;"
-                             "}"
-                             )
-        self.button1.setIcon(QtGui.QIcon('right-arrow.png'))
-        self.button2.setIcon(QtGui.QIcon('arrow.png'))
-        self.button3.setIcon(QtGui.QIcon('repeat.png'))
-        self.button1.setFixedSize(QSize(150, 30))
-        self.button2.setFixedSize(QSize(150, 30))
+        self.button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
+        self.button2.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
+        self.button3.setIcon(QtGui.QIcon('flag-for-russia.svg'))
+        self.button_next_word.setIconSize(QSize(50,50))
+        self.button2.setIconSize(QSize(50,50))
+        self.button3.setIconSize(QSize(50,50))
+        self.button_next_word.setFixedSize(QSize(60, 50))
+        self.button2.setFixedSize(QSize(50, 30))
+        self.button3.setFixedSize(QSize(50, 30))
         self.layout = QtWidgets.QVBoxLayout()
         self.setFixedSize(QSize(500, 300))
         self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button1)
+        self.layout.addWidget(self.button_next_word)
         self.layout.addWidget(self.button2)
         self.layout.addWidget(self.button3)
         self.setLayout(self.layout)
+        self.past_word = []
         # привязка функции chose_random_word к кнопке стрелочка вправо
-        self.button1.clicked.connect(self.next_random_word)
+        self.button_next_word.clicked.connect(self.next_random_word)
         self.button3.clicked.connect(self.translate)
+        self.button2.clicked.connect(self.previous_word)
+        print()
 
     def next_random_word(self):
         self.rnd_word = random.choice(self.hello)
+        self.past_word.append(self.rnd_word)
         self.text.setText(self.rnd_word)
         
     def translate(self):
         self.text.setText(self.dct.get(self.rnd_word))
+
+    def previous_word(self):
+        self.text.setText(self.past_word[-1])
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
