@@ -7,39 +7,34 @@ import random
 
 lines = {}
 
+import mysql.connector
 
+mydb = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='12312q',
+    port='3306',
+    database='english_words',
+)
 
-# def application():
-#     app = QApplication(sys.argv)
-#     window = QMainWindow()
-#     window.setWindowTitle('English Words')
-#     window.setGeometry(300, 200, 350, 250)
-#     main_text = QtWidgets.QLabel(window)
-#     main_text.setText('test')
-#     main_text.move(150, 100)
-#     main_text.adjustSize()
-
-#     btn_next = QtWidgets.QPushButton(window)
-#     btn_next.setText("Push Me")
-#     btn_next.move(160, 200)
-#     # btn_next.clicked.connect(click_next)
-
-#     window.show()
-#     sys.exit(app.exec_())
-
-# if __name__ == '__main__':
-#     application()
+mycursor = mydb.cursor()
+mycursor.execute('SELECT english, russian FROM main')
+words = mycursor.fetchall()
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
-        with open('D:\Project\English words\english_words.txt', 'r', encoding="utf8") as file:
-            lines = list(map(str.strip, file.readlines()))
-            dct = {}
-            for i in lines:
-                if i != '' and '-' in i:
-                    splt = i.split(' - ')
-                    dct.update({splt[0]:splt[1]})
+        # with open('D:\Project\English words\english_words.txt', 'r', encoding="utf8") as file:
+        #     lines = list(map(str.strip, file.readlines()))
+        #     dct = {}
+        #     for i in lines:
+        #         if i != '' and '-' in i:
+        #             splt = i.split(' - ')
+        #             dct.update({splt[0]:splt[1]})
+        dct = {}
+        for i in words:
+            dct.update({i[0]:i[1]})
+            print(dct)
 
         self.setWindowTitle('English Words')
         self.setWindowIcon(QtGui.QIcon('UkIcon.png'))
