@@ -1,10 +1,12 @@
-from PyQt5 import QtWidgets, QtCore, QtGui, uic
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import * 
+from PyQt5.QtWidgets import QShortcut
 import sys
 import random
 import mysql.connector
+import ctypes
 
 
 lines = {}
@@ -48,17 +50,18 @@ class MyWidget(QtWidgets.QWidget):
 
         self.setWindowTitle('English Words')
         self.setWindowIcon(QtGui.QIcon('UkIcon.png'))
-        self.dct = dct
-        self.button_next_word = QtWidgets.QPushButton()
+        self.button_next_word = QPushButton()
         self.button_ru = QtWidgets.QPushButton()
         self.button_en = QtWidgets.QPushButton()
         self.button_cz = QtWidgets.QPushButton()
+        self.button_shortcut_show = QtWidgets.QPushButton()
         self.text = QtWidgets.QLabel("Hello World")
         self.text.setFont(QFont('', 35))
         self.text.setAlignment(QtCore.Qt.AlignCenter)
         self.button_next_word.setStyleSheet("QPushButton"
                              "{"
                              "background-color : lightblue;"
+                             "border-radius : 5px"
                              "}"
                              "QPushButton::pressed"
                              "{"
@@ -66,31 +69,60 @@ class MyWidget(QtWidgets.QWidget):
                              "}"
                              )
         
+        self.button_ru.setStyleSheet("QPushButton"
+                             "{"
+                             "border-radius : 50px"
+                             "}"
+                             )
+        
+        self.button_en.setStyleSheet("QPushButton"
+                             "{"
+                             "border-radius : 50px"
+                             "}"
+                             )
+        
+        self.button_cz.setStyleSheet("QPushButton"
+                             "{"
+                             "border-radius : 50px"
+                             "}"
+                             )
+
         self.setStyleSheet("background-color: #0f7531;") 
-
-
         self.button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
-        self.button_ru.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
-        self.button_en.setIcon(QtGui.QIcon('flag-for-russia.svg'))
-        self.button_cz.setIcon(QtGui.QIcon('czech-republic.png'))
+        self.button_en.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
+        self.button_ru.setIcon(QtGui.QIcon('flag-for-russia.svg'))
+        self.button_cz.setIcon(QtGui.QIcon('czech-republic-flag-icon.svg'))
+        self.button_shortcut_show.setIcon(QtGui.QIcon('shortcut-script-app.png'))
         self.button_next_word.setIconSize(QSize(50,50))
-        self.button_ru.setIconSize(QSize(50,50))
         self.button_en.setIconSize(QSize(50,50))
+        self.button_ru.setIconSize(QSize(50,50))
         self.button_cz.setIconSize(QSize(50,50))
+        self.button_shortcut_show.setIconSize(QSize(50,50))
         self.button_next_word.setFixedSize(QSize(60, 50))
-        self.button_ru.setFixedSize(QSize(50, 30))
         self.button_en.setFixedSize(QSize(50, 30))
+        self.button_ru.setFixedSize(QSize(50, 30))
         self.button_cz.setFixedSize(QSize(50, 30))
+        self.button_shortcut_show.setFixedSize(QSize(55, 55))
         self.layout = QtWidgets.QVBoxLayout()
         self.setFixedSize(QSize(500, 300))
         self.layout.addWidget(self.text)
         self.layout.addWidget(self.button_next_word)
-        self.layout.addWidget(self.button_ru)
         self.layout.addWidget(self.button_en)
+        self.layout.addWidget(self.button_ru)
         self.layout.addWidget(self.button_cz)
+        self.layout.addWidget(self.button_shortcut_show)
         self.setLayout(self.layout)
         self.past_word = []
-        # привязка функции chose_random_word к кнопке стрелочка вправо
+        # create shortcut's action
+        self.shortcut_next_word = QShortcut(QKeySequence('Space'), self)
+        self.shortcut_next_word.activated.connect(self.next_random_word)
+        self.shortcut_en = QShortcut(QKeySequence('1'), self)
+        self.shortcut_en.activated.connect(self.translate_en)
+        self.shortcut_ru = QShortcut(QKeySequence('2'), self)
+        self.shortcut_ru.activated.connect(self.translate_ru)
+        self.shortcut_cz = QShortcut(QKeySequence('3'), self)
+        self.shortcut_cz.activated.connect(self.translate_cz)
+        # create mouse click action
         self.button_next_word.clicked.connect(self.next_random_word)
         self.button_en.clicked.connect(self.translate_en)
         self.button_cz.clicked.connect(self.translate_cz)
@@ -102,14 +134,14 @@ class MyWidget(QtWidgets.QWidget):
         self.values = list(self.select.values())[0]
         self.text.setText(self.values[0])
 
-    def translate_en(self):
-        self.text.setText(self.values[1])
-
-
     def translate_cz(self):
         self.text.setText(self.values[2])
 
+
     def translate_ru(self):
+        self.text.setText(self.values[1])
+
+    def translate_en(self):
         self.text.setText(self.values[0])
 
 if __name__ == "__main__":
