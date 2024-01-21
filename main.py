@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import * 
 from PyQt5.QtWidgets import QShortcut
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QTabWidget
 import sys
 import random
 import mysql.connector
@@ -84,12 +85,13 @@ class MyWidget(QtWidgets.QWidget):
         self.button_cz = QtWidgets.QPushButton()
         self.button_new_word = QtWidgets.QPushButton()
         self.button_know = QtWidgets.QPushButton()
+        self.button_irregular_verbs = QtWidgets.QPushButton()
         self.text = QtWidgets.QLabel("Hello World")
         self.text.setFont(QFont('Times New Roman', 35))
         self.text.setAlignment(QtCore.Qt.AlignCenter)
         self.button_next_word.setStyleSheet("QPushButton"
                              "{"
-                             "background-color : lightblue;"
+                             "background-color : white;"
                              "border-radius : 5px"
                              "}"
                              "QPushButton::pressed"
@@ -116,27 +118,30 @@ class MyWidget(QtWidgets.QWidget):
                              "}"
                              )
 
-        self.setStyleSheet("background-color: #0f7531;") 
+        self.setStyleSheet("background-color: #dbe9f7;")
         self.button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
         self.button_en.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
         self.button_ru.setIcon(QtGui.QIcon('flag-for-russia.svg'))
         self.button_cz.setIcon(QtGui.QIcon('czech-republic-flag-icon.svg'))
         self.button_new_word.setIcon(QtGui.QIcon('plus-black-symbol.png'))
         self.button_know.setIcon(QtGui.QIcon('know_icon.png'))
+        self.button_irregular_verbs.setIcon(QtGui.QIcon('irregular_verbs.png'))
         self.button_next_word.setIconSize(QSize(50,50))
         self.button_en.setIconSize(QSize(50,50))
         self.button_ru.setIconSize(QSize(50,50))
         self.button_cz.setIconSize(QSize(50,50))
         self.button_new_word.setIconSize(QSize(30,30))
         self.button_know.setIconSize(QSize(50,50))
+        self.button_irregular_verbs.setIconSize(QSize(50,50))
         self.button_next_word.setFixedSize(QSize(60, 50))
         self.button_en.setFixedSize(QSize(50, 30))
         self.button_ru.setFixedSize(QSize(50, 30))
         self.button_cz.setFixedSize(QSize(50, 30))
         self.button_new_word.setFixedSize(QSize(50, 50))
         self.button_know.setFixedSize(QSize(50, 50))
-        self.layout = QtWidgets.QVBoxLayout()
+        self.button_irregular_verbs.setFixedSize(QSize(50, 50))
         self.setFixedSize(QSize(700, 400))
+        self.layout = QtWidgets.QVBoxLayout()
         self.layout.addWidget(self.text)
         self.layout.addWidget(self.button_next_word)
         self.layout.addWidget(self.button_en)
@@ -144,7 +149,10 @@ class MyWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.button_cz)
         self.layout.addWidget(self.button_new_word)
         self.layout.addWidget(self.button_know)
+        self.layout.addWidget(self.button_irregular_verbs)
         self.setLayout(self.layout)
+
+
         self.past_word = []
         # create shortcut's action
         self.shortcut_next_word = QShortcut(QKeySequence('Space'), self)
@@ -162,6 +170,7 @@ class MyWidget(QtWidgets.QWidget):
         self.button_ru.clicked.connect(self.translate_ru)
         self.button_new_word.clicked.connect(self.append_new_word_in_database)
         self.button_know.clicked.connect(self.know_word)
+        self.button_irregular_verbs.clicked.connect(self.irregular_verbs)
 
 
     def next_random_word(self):
@@ -179,17 +188,32 @@ class MyWidget(QtWidgets.QWidget):
     def translate_en(self):
         self.text.setText(self.values[0])
 
+    def irregular_verbs(self):
+        self.window2 = QMainWindow()
+        self.window2.setWindowTitle('Irregular Verbs')
+        self.randow_verb = QtWidgets.QPushButton()
+        self.randow_verb.setIcon(QtGui.QIcon('random.png'))
+        self.randow_verb.setIconSize(QSize(30,30))
+        self.randow_verb.setFixedSize(QSize(50, 50))
+        # self.layout2 = QtWidgets.QHBoxLayout()
+        # self.layout2.addWidget(self.randow_verb)
+        # self.setLayout(self.layout2)
+        wid = QWidget(self)
+        self.setCentralWidget(wid)
+        layout = QtGui.QVBoxLayout()
+        wid.setLayout(layout)
+
     def append_new_word_in_database(self):
         dialog = QInputDialog()
         dialog.setLabelText('Eng/Ru/Cz word translation')
         dialog.exec()
         lst_values = dialog.textValue().split('/')
-        sql_insert_query = """INSERT INTO main (english, russian, chech) 
-                              VALUES (%s, %s, %s)"""
-        
-        tuple1 = (lst_values[0], lst_values[1], lst_values[2])
-        mycursor.execute(sql_insert_query, tuple1)
-        mydb.commit()
+        if '/' in dialog.textValue():
+            sql_insert_query = """INSERT INTO main (english, russian, chech) 
+                                VALUES (%s, %s, %s)"""
+            tuple1 = (lst_values[0], lst_values[1], lst_values[2])
+            mycursor.execute(sql_insert_query, tuple1)
+            mydb.commit()
 
     def know_word(self):
         print(self.values)
