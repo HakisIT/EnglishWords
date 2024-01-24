@@ -77,101 +77,218 @@ class MyWidget(QtWidgets.QWidget):
 
         dct = {}
         dct.update(selection())
+
+        # main window design
         self.setWindowTitle('English Words')
         self.setWindowIcon(QtGui.QIcon('UkIcon.png'))
-        self.button_next_word = QPushButton()
-        self.button_ru = QtWidgets.QPushButton()
-        self.button_en = QtWidgets.QPushButton()
-        self.button_cz = QtWidgets.QPushButton()
-        self.button_new_word = QtWidgets.QPushButton()
-        self.button_know = QtWidgets.QPushButton()
-        self.button_irregular_verbs = QtWidgets.QPushButton()
+        self.setFixedSize(QSize(600, 400))
+        self.setStyleSheet("background-color: #dbe9f7;")
+
+        # create buttons
+        # self.button_next_word = QtWidgets.QPushButton()
+        # self.button_ru = QtWidgets.QPushButton()
+        # self.button_en = QtWidgets.QPushButton()
+        # self.button_cz = QtWidgets.QPushButton()
+        # self.button_new_word = QtWidgets.QPushButton()
+        # self.button_know = QtWidgets.QPushButton()
+        # self.button_irregular_verbs = QtWidgets.QPushButton()
+        self.tab = QtWidgets.QTabWidget()
+
+
+        self.widget_flash_words = QWidget()
+        self.tab.addTab(self.widget_flash_words, "Random Words")
+        self.tab1UI()
+
+
+        # greeting & text settings
+        # self.text = QtWidgets.QLabel("Hello World")
+        # self.text.setFont(QFont('Times New Roman', 35))
+        # self.text.setAlignment(QtCore.Qt.AlignCenter)
+
+        # buttons design
+        # self.button_next_word.setStyleSheet("QPushButton"
+                            #  "{"
+                            #  "background-color : white;"
+                            #  "border-radius : 5px"
+                            #  "}"
+                            #  "QPushButton::pressed"
+                            #  "{"
+                            #  "background-color : silver;"
+                            #  "}"
+                            #  )
+        
+        # self.button_ru.setStyleSheet("QPushButton"
+        #                      "{"
+        #                      "border-radius : 50px"
+        #                      "}"
+        #                      )
+        
+        # self.button_en.setStyleSheet("QPushButton"
+        #                      "{"
+        #                      "border-radius : 50px"
+        #                      "}"
+        #                      )
+        
+        # self.button_cz.setStyleSheet("QPushButton"
+        #                      "{"
+        #                      "border-radius : 50px"
+        #                      "}"
+        #                      )
+        
+        # attaching an icon to buttons
+        # self.button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
+        # self.button_en.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
+        # self.button_ru.setIcon(QtGui.QIcon('flag-for-russia.svg'))
+        # self.button_cz.setIcon(QtGui.QIcon('czech-republic-flag-icon.svg'))
+        # self.button_new_word.setIcon(QtGui.QIcon('plus-black-symbol.png'))
+        # self.button_know.setIcon(QtGui.QIcon('know_icon.png'))
+        # self.button_irregular_verbs.setIcon(QtGui.QIcon('irregular_verbs.png'))
+
+        # icons size fix
+        # self.button_next_word.setIconSize(QSize(50,50))
+        # self.button_en.setIconSize(QSize(50,50))
+        # self.button_ru.setIconSize(QSize(50,50))
+        # self.button_cz.setIconSize(QSize(50,50))
+        # self.button_new_word.setIconSize(QSize(30,30))
+        # self.button_know.setIconSize(QSize(50,50))
+        # self.button_irregular_verbs.setIconSize(QSize(50,50))
+
+        # buttons size fix
+        # self.button_next_word.setFixedSize(QSize(60, 50))
+        # self.button_en.setFixedSize(QSize(50, 30))
+        # self.button_ru.setFixedSize(QSize(50, 30))
+        # self.button_cz.setFixedSize(QSize(50, 30))
+        # self.button_new_word.setFixedSize(QSize(50, 50))
+        # self.button_know.setFixedSize(QSize(50, 50))
+        # self.button_irregular_verbs.setFixedSize(QSize(50, 50))
+
+        # layout & widget binding
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.tab)
+        # self.layout.addWidget(self.text)
+        # self.layout.addWidget(self.button_next_word)
+        # self.layout.addWidget(self.button_en)
+        # self.layout.addWidget(self.button_ru)
+        # self.layout.addWidget(self.button_cz)
+        # self.layout.addWidget(self.button_new_word)
+        # self.layout.addWidget(self.button_know)
+        # self.layout.addWidget(self.button_irregular_verbs)
+        
+        self.setLayout(self.layout)
+
+        # create shortcuts action
+        # self.shortcut_next_word = QShortcut(QKeySequence('Space'), self)
+        # self.shortcut_next_word.activated.connect(self.next_random_word)
+        # self.shortcut_en = QShortcut(QKeySequence('1'), self)
+        # self.shortcut_en.activated.connect(self.translate_en)
+        # self.shortcut_ru = QShortcut(QKeySequence('2'), self)
+        # self.shortcut_ru.activated.connect(self.translate_ru)
+        # self.shortcut_cz = QShortcut(QKeySequence('3'), self)
+        # self.shortcut_cz.activated.connect(self.translate_cz)
+        # create mouse click action
+        # self.button_next_word.clicked.connect(self.next_random_word)
+        # self.button_en.clicked.connect(self.translate_en)
+        # self.button_cz.clicked.connect(self.translate_cz)
+        # self.button_ru.clicked.connect(self.translate_ru)
+        # self.button_new_word.clicked.connect(self.append_new_word_in_database)
+        # self.button_know.clicked.connect(self.know_word)
+        # self.button_irregular_verbs.clicked.connect(self.irregular_verbs)
+
+    def tab1UI(self):
+        self.layout = QVBoxLayout()
+
         self.text = QtWidgets.QLabel("Hello World")
         self.text.setFont(QFont('Times New Roman', 35))
         self.text.setAlignment(QtCore.Qt.AlignCenter)
-        self.button_next_word.setStyleSheet("QPushButton"
-                             "{"
-                             "background-color : white;"
-                             "border-radius : 5px"
-                             "}"
-                             "QPushButton::pressed"
-                             "{"
-                             "background-color : silver;"
-                             "}"
-                             )
         
-        self.button_ru.setStyleSheet("QPushButton"
-                             "{"
-                             "border-radius : 50px"
-                             "}"
-                             )
-        
-        self.button_en.setStyleSheet("QPushButton"
-                             "{"
-                             "border-radius : 50px"
-                             "}"
-                             )
-        
-        self.button_cz.setStyleSheet("QPushButton"
-                             "{"
-                             "border-radius : 50px"
-                             "}"
-                             )
+        button_ru = QtWidgets.QPushButton()
+        button_en = QtWidgets.QPushButton()
+        button_cz = QtWidgets.QPushButton()
+        button_new_word = QtWidgets.QPushButton()
+        button_know = QtWidgets.QPushButton()
+        button_irregular_verbs = QtWidgets.QPushButton()
+        button_next_word = QtWidgets.QPushButton()
 
-        self.setStyleSheet("background-color: #dbe9f7;")
-        self.button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
-        self.button_en.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
-        self.button_ru.setIcon(QtGui.QIcon('flag-for-russia.svg'))
-        self.button_cz.setIcon(QtGui.QIcon('czech-republic-flag-icon.svg'))
-        self.button_new_word.setIcon(QtGui.QIcon('plus-black-symbol.png'))
-        self.button_know.setIcon(QtGui.QIcon('know_icon.png'))
-        self.button_irregular_verbs.setIcon(QtGui.QIcon('irregular_verbs.png'))
-        self.button_next_word.setIconSize(QSize(50,50))
-        self.button_en.setIconSize(QSize(50,50))
-        self.button_ru.setIconSize(QSize(50,50))
-        self.button_cz.setIconSize(QSize(50,50))
-        self.button_new_word.setIconSize(QSize(30,30))
-        self.button_know.setIconSize(QSize(50,50))
-        self.button_irregular_verbs.setIconSize(QSize(50,50))
-        self.button_next_word.setFixedSize(QSize(60, 50))
-        self.button_en.setFixedSize(QSize(50, 30))
-        self.button_ru.setFixedSize(QSize(50, 30))
-        self.button_cz.setFixedSize(QSize(50, 30))
-        self.button_new_word.setFixedSize(QSize(50, 50))
-        self.button_know.setFixedSize(QSize(50, 50))
-        self.button_irregular_verbs.setFixedSize(QSize(50, 50))
-        self.setFixedSize(QSize(700, 400))
-        self.layout = QtWidgets.QVBoxLayout()
+        button_next_word.setStyleSheet("QPushButton"
+                       "{"
+                       "background-color : white;"
+                       "border-radius : 5px"
+                       "}"
+                       "QPushButton::pressed"
+                       "{"
+                       "background-color : silver;"
+                       "}"
+                       )
+        button_ru.setStyleSheet("QPushButton"
+                             "{"
+                             "border-radius : 50px"
+                             "}"
+                             )
+        
+        button_en.setStyleSheet("QPushButton"
+                             "{"
+                             "border-radius : 50px"
+                             "}"
+                             )
+        
+        button_cz.setStyleSheet("QPushButton"
+                             "{"
+                             "border-radius : 50px"
+                             "}"
+                             )
+        
+        button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
+        button_en.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
+        button_ru.setIcon(QtGui.QIcon('flag-for-russia.svg'))
+        button_cz.setIcon(QtGui.QIcon('czech-republic-flag-icon.svg'))
+        button_new_word.setIcon(QtGui.QIcon('plus-black-symbol.png'))
+        button_know.setIcon(QtGui.QIcon('know_icon.png'))
+        button_irregular_verbs.setIcon(QtGui.QIcon('irregular_verbs.png'))
+
+        button_next_word.setIconSize(QSize(50,50))
+        button_en.setIconSize(QSize(50,50))
+        button_ru.setIconSize(QSize(50,50))
+        button_cz.setIconSize(QSize(50,50))
+        button_new_word.setIconSize(QSize(30,30))
+        button_know.setIconSize(QSize(50,50))
+        button_irregular_verbs.setIconSize(QSize(50,50))
+
+
+        button_next_word.setFixedSize(QSize(60, 50))
+        button_en.setFixedSize(QSize(50, 30))
+        button_ru.setFixedSize(QSize(50, 30))
+        button_cz.setFixedSize(QSize(50, 30))
+        button_new_word.setFixedSize(QSize(50, 50))
+        button_know.setFixedSize(QSize(50, 50))
+        button_irregular_verbs.setFixedSize(QSize(50, 50))
+
         self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button_next_word)
-        self.layout.addWidget(self.button_en)
-        self.layout.addWidget(self.button_ru)
-        self.layout.addWidget(self.button_cz)
-        self.layout.addWidget(self.button_new_word)
-        self.layout.addWidget(self.button_know)
-        self.layout.addWidget(self.button_irregular_verbs)
-        self.setLayout(self.layout)
+        self.layout.addWidget(button_next_word)
+        self.layout.addWidget(button_en)
+        self.layout.addWidget(button_ru)
+        self.layout.addWidget(button_cz)
+        self.layout.addWidget(button_new_word)
+        self.layout.addWidget(button_know)
+        # self.layout.addWidget(button_irregular_verbs)
 
+        shortcut_next_word = QShortcut(QKeySequence('Space'), self)
+        shortcut_next_word.activated.connect(self.next_random_word)
+        shortcut_en = QShortcut(QKeySequence('1'), self)
+        shortcut_en.activated.connect(self.translate_en)
+        shortcut_ru = QShortcut(QKeySequence('2'), self)
+        shortcut_ru.activated.connect(self.translate_ru)
+        shortcut_cz = QShortcut(QKeySequence('3'), self)
+        shortcut_cz.activated.connect(self.translate_cz)
 
-        self.past_word = []
-        # create shortcut's action
-        self.shortcut_next_word = QShortcut(QKeySequence('Space'), self)
-        self.shortcut_next_word.activated.connect(self.next_random_word)
-        self.shortcut_en = QShortcut(QKeySequence('1'), self)
-        self.shortcut_en.activated.connect(self.translate_en)
-        self.shortcut_ru = QShortcut(QKeySequence('2'), self)
-        self.shortcut_ru.activated.connect(self.translate_ru)
-        self.shortcut_cz = QShortcut(QKeySequence('3'), self)
-        self.shortcut_cz.activated.connect(self.translate_cz)
-        # create mouse click action
-        self.button_next_word.clicked.connect(self.next_random_word)
-        self.button_en.clicked.connect(self.translate_en)
-        self.button_cz.clicked.connect(self.translate_cz)
-        self.button_ru.clicked.connect(self.translate_ru)
-        self.button_new_word.clicked.connect(self.append_new_word_in_database)
-        self.button_know.clicked.connect(self.know_word)
-        self.button_irregular_verbs.clicked.connect(self.irregular_verbs)
+        button_next_word.clicked.connect(self.next_random_word)
+        button_en.clicked.connect(self.translate_en)
+        button_cz.clicked.connect(self.translate_cz)
+        button_ru.clicked.connect(self.translate_ru)
+        button_new_word.clicked.connect(self.append_new_word_in_database)
+        button_know.clicked.connect(self.know_word)
+        button_irregular_verbs.clicked.connect(self.irregular_verbs)
 
+        self.widget_flash_words.setLayout(self.layout)
 
     def next_random_word(self):
         self.select = selection()
@@ -181,7 +298,6 @@ class MyWidget(QtWidgets.QWidget):
     def translate_cz(self):
         self.text.setText(self.values[2])
 
-
     def translate_ru(self):
         self.text.setText(self.values[1])
 
@@ -189,19 +305,28 @@ class MyWidget(QtWidgets.QWidget):
         self.text.setText(self.values[0])
 
     def irregular_verbs(self):
-        self.window2 = QMainWindow()
-        self.window2.setWindowTitle('Irregular Verbs')
-        self.randow_verb = QtWidgets.QPushButton()
-        self.randow_verb.setIcon(QtGui.QIcon('random.png'))
-        self.randow_verb.setIconSize(QSize(30,30))
-        self.randow_verb.setFixedSize(QSize(50, 50))
+        global other_window
+        other_window = QDialog()
+        other_window.setWindowTitle('Irregular Verbs')
+        layout2 = QVBoxLayout()
+        random_verb = QtWidgets.QPushButton()
+        random_verb.setIcon(QtGui.QIcon('random.png'))
+        random_verb.setIconSize(QSize(30,30))
+        random_verb.setFixedSize(QSize(50, 50))
+        layout2.addWidget(random_verb)
+        self.setLayout(layout2)
+        other_window.show()
         # self.layout2 = QtWidgets.QHBoxLayout()
         # self.layout2.addWidget(self.randow_verb)
         # self.setLayout(self.layout2)
-        wid = QWidget(self)
-        self.setCentralWidget(wid)
-        layout = QtGui.QVBoxLayout()
-        wid.setLayout(layout)
+        # self.setCentralWidget(wid)
+        # layout = QtGui.QVBoxLayout()
+        # wid.setLayout(layout)
+        # wid = QtWidgets.QWidget(self)
+        # self.setCentralWidget(wid)
+        # layout = QtWidgets.QVBoxLayout()
+        # layout.addWidget(random_verb)
+        # wid.setLayout(layout)
 
     def append_new_word_in_database(self):
         dialog = QInputDialog()
