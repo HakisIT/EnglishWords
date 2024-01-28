@@ -42,9 +42,19 @@ def select_know():
         lst_know_words.append(int(i[0]))
     return lst_know_words
 
+def select_irregular_verbs():
+    mycursor = mydb.cursor()
+    mycursor.execute('SELECT id FROM irregular_verbs')
+    irregular_words = mycursor.fetchall()
+    lst_irregular_words = []
+    for i in irregular_words:
+        lst_irregular_words.append(int(i[0]))
+    return lst_irregular_words
+
 
 lst_know = select_know()
 lst_main = select_main()
+lst_irregular = select_irregular_verbs()
 
 def filtered_lst(x):
     if x in lst_know:
@@ -63,6 +73,14 @@ def selection():
     dct = {word1[0][0]:[word1[0][1], word1[0][2], word1[0][3]]}
     return dct
 
+def selection_irregular():
+    random_id = random.choice(lst_irregular)
+    sql_select_query = """SELECT * FROM irregular_verbs WHERE id = %s"""
+    mycursor.execute(sql_select_query, (random_id,))
+    word1 = mycursor.fetchall()
+    dct_irregular = {word1[0][0]:[word1[0][1], word1[0][2], word1[0][3]]}
+    return dct_irregular
+
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
@@ -78,10 +96,13 @@ class MyWidget(QtWidgets.QWidget):
         dct = {}
         dct.update(selection())
 
+        dct_irregular = {}
+        dct_irregular.update(selection_irregular())
+
         # main window design
         self.setWindowTitle('English Words')
         self.setWindowIcon(QtGui.QIcon('UkIcon.png'))
-        self.setFixedSize(QSize(600, 400))
+        self.setFixedSize(QSize(800, 500))
         self.setStyleSheet("background-color: #dbe9f7;")
 
         # create buttons
@@ -97,7 +118,10 @@ class MyWidget(QtWidgets.QWidget):
 
         self.widget_flash_words = QWidget()
         self.tab.addTab(self.widget_flash_words, "Random Words")
+        self.widget_irregular_verbs = QWidget()
+        self.tab.addTab(self.widget_irregular_verbs, "Irregular Verbs")
         self.tab1UI()
+        self.tab2UI()
 
 
         # greeting & text settings
@@ -206,7 +230,6 @@ class MyWidget(QtWidgets.QWidget):
         button_cz = QtWidgets.QPushButton()
         button_new_word = QtWidgets.QPushButton()
         button_know = QtWidgets.QPushButton()
-        button_irregular_verbs = QtWidgets.QPushButton()
         button_next_word = QtWidgets.QPushButton()
 
         button_next_word.setStyleSheet("QPushButton"
@@ -243,7 +266,6 @@ class MyWidget(QtWidgets.QWidget):
         button_cz.setIcon(QtGui.QIcon('czech-republic-flag-icon.svg'))
         button_new_word.setIcon(QtGui.QIcon('plus-black-symbol.png'))
         button_know.setIcon(QtGui.QIcon('know_icon.png'))
-        button_irregular_verbs.setIcon(QtGui.QIcon('irregular_verbs.png'))
 
         button_next_word.setIconSize(QSize(50,50))
         button_en.setIconSize(QSize(50,50))
@@ -251,8 +273,6 @@ class MyWidget(QtWidgets.QWidget):
         button_cz.setIconSize(QSize(50,50))
         button_new_word.setIconSize(QSize(30,30))
         button_know.setIconSize(QSize(50,50))
-        button_irregular_verbs.setIconSize(QSize(50,50))
-
 
         button_next_word.setFixedSize(QSize(60, 50))
         button_en.setFixedSize(QSize(50, 30))
@@ -260,7 +280,6 @@ class MyWidget(QtWidgets.QWidget):
         button_cz.setFixedSize(QSize(50, 30))
         button_new_word.setFixedSize(QSize(50, 50))
         button_know.setFixedSize(QSize(50, 50))
-        button_irregular_verbs.setFixedSize(QSize(50, 50))
 
         self.layout.addWidget(self.text)
         self.layout.addWidget(button_next_word)
@@ -269,7 +288,6 @@ class MyWidget(QtWidgets.QWidget):
         self.layout.addWidget(button_cz)
         self.layout.addWidget(button_new_word)
         self.layout.addWidget(button_know)
-        # self.layout.addWidget(button_irregular_verbs)
 
         shortcut_next_word = QShortcut(QKeySequence('Space'), self)
         shortcut_next_word.activated.connect(self.next_random_word)
@@ -286,36 +304,96 @@ class MyWidget(QtWidgets.QWidget):
         button_ru.clicked.connect(self.translate_ru)
         button_new_word.clicked.connect(self.append_new_word_in_database)
         button_know.clicked.connect(self.know_word)
-        button_irregular_verbs.clicked.connect(self.irregular_verbs)
 
         self.widget_flash_words.setLayout(self.layout)
+
+    def tab2UI(self):
+        self.layout = QHBoxLayout()
+        self.text_irregular = QtWidgets.QLabel("Hello World")
+        self.text_irregular.setFont(QFont('Times New Roman', 35))
+        self.text_irregular.setAlignment(QtCore.Qt.AlignCenter)
+        button_next_word = QtWidgets.QPushButton()
+        button_show_verbs = QtWidgets.QPushButton()
+        
+        button_next_word.setStyleSheet("QPushButton"
+                       "{"
+                       "background-color : white;"
+                       "border-radius : 5px"
+                       "}"
+                       "QPushButton::pressed"
+                       "{"
+                       "background-color : silver;"
+                       "}"
+                       )
+        button_show_verbs.setStyleSheet("QPushButton"
+                       "{"
+                       "background-color : white;"
+                       "border-radius : 5px"
+                       "}"
+                       "QPushButton::pressed"
+                       "{"
+                       "background-color : silver;"
+                       "}"
+                       )
+        
+        button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
+        button_next_word.setIconSize(QSize(50,50))
+        button_next_word.setFixedSize(QSize(60, 50))
+
+        button_show_verbs.setIcon(QtGui.QIcon('eye_icon.png'))
+        button_show_verbs.setIconSize(QSize(50,50))
+        button_show_verbs.setFixedSize(QSize(60, 50))
+        
+        self.layout.addWidget(button_next_word)
+        self.layout.addWidget(button_show_verbs)
+        self.layout.addWidget(self.text_irregular)        
+
+        button_next_word.clicked.connect(self.next_irregular_verb)
+        button_show_verbs.clicked.connect(self.show_irregular_verb)
+        self.widget_irregular_verbs.setLayout(self.layout)
+
 
     def next_random_word(self):
         self.select = selection()
         self.values = list(self.select.values())[0]
         self.text.setText(self.values[0])
+    
+
+    def next_irregular_verb(self):
+        self.select = selection_irregular()
+        self.values = list(self.select.values())[0]
+        self.text_irregular.setText(self.values[0])
+
+
+    def show_irregular_verb(self):
+        # self.values = list(self.select.values())[0]
+        self.text_irregular.setText(self.values[0]+', '+self.values[1]+', '+self.values[2])
+
 
     def translate_cz(self):
         self.text.setText(self.values[2])
 
+
     def translate_ru(self):
         self.text.setText(self.values[1])
+
 
     def translate_en(self):
         self.text.setText(self.values[0])
 
-    def irregular_verbs(self):
-        global other_window
-        other_window = QDialog()
-        other_window.setWindowTitle('Irregular Verbs')
-        layout2 = QVBoxLayout()
-        random_verb = QtWidgets.QPushButton()
-        random_verb.setIcon(QtGui.QIcon('random.png'))
-        random_verb.setIconSize(QSize(30,30))
-        random_verb.setFixedSize(QSize(50, 50))
-        layout2.addWidget(random_verb)
-        self.setLayout(layout2)
-        other_window.show()
+
+    # def irregular_verbs(self):
+    #     global other_window
+    #     other_window = QDialog()
+    #     other_window.setWindowTitle('Irregular Verbs')
+    #     layout2 = QVBoxLayout()
+    #     random_verb = QtWidgets.QPushButton()
+    #     random_verb.setIcon(QtGui.QIcon('random.png'))
+    #     random_verb.setIconSize(QSize(30,30))
+    #     random_verb.setFixedSize(QSize(50, 50))
+    #     layout2.addWidget(random_verb)
+    #     self.setLayout(layout2)
+    #     other_window.show()
         # self.layout2 = QtWidgets.QHBoxLayout()
         # self.layout2.addWidget(self.randow_verb)
         # self.setLayout(self.layout2)
@@ -339,6 +417,7 @@ class MyWidget(QtWidgets.QWidget):
             tuple1 = (lst_values[0], lst_values[1], lst_values[2])
             mycursor.execute(sql_insert_query, tuple1)
             mydb.commit()
+
 
     def know_word(self):
         print(self.values)
