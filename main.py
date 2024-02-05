@@ -180,6 +180,7 @@ class MyWidget(QtWidgets.QWidget):
                              "}"
                              )
         
+        
         # attaching an icon to buttons
         button_next_word.setIcon(QtGui.QIcon('right-arrow.png'))
         button_en.setIcon(QtGui.QIcon('flag-for-united-kingdom.svg'))
